@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Eventos Socket.IO - TurnosRed</title>
+    <style>
+      body { font: 16px system-ui; max-width: 900px; margin: 40px auto; background: #f4f7fb; color: #172033; }
+      h1 { color: #146c94; }
+      #estado { color: #16794b; font-weight: 700; }
+      pre { min-height: 260px; padding: 20px; border-radius: 10px; background: #101827; color: #d7e4ff; white-space: pre-wrap; }
+    </style>
+  </head>
+  <body>
+    <h1>TurnosRed - eventos en tiempo real</h1>
+    <p id="estado">Conectando...</p>
+    <pre id="eventos">Esperando eventos...</pre>
+    <script src="http://localhost:3000/socket.io/socket.io.js"></script>
+    <script>
+      const estado = document.querySelector('#estado');
+      const salida = document.querySelector('#eventos');
+      const socket = io('http://localhost:3000');
+      const registrar = (nombre, datos) => {
+        const linea = `${new Date().toLocaleTimeString()} | ${nombre}\n${JSON.stringify(datos, null, 2)}\n\n`;
+        salida.textContent = salida.textContent === 'Esperando eventos...' ? linea : linea + salida.textContent;
+      };
+      socket.on('connect', () => { estado.textContent = `Conectado: ${socket.id}`; });
+      socket.on('turno:nuevo', (datos) => registrar('turno:nuevo', datos));
+      socket.on('turno:actualizado', (datos) => registrar('turno:actualizado', datos));
+      socket.on('turno:eliminado', (datos) => registrar('turno:eliminado', datos));
+    </script>
+  </body>
+</html>

@@ -1,0 +1,30 @@
+{
+  "info": {
+    "name": "TurnosRed - Actividad 1",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [{ "key": "baseUrl", "value": "http://localhost:3000" }],
+  "item": [
+    { "name": "1 - Obtener todos", "request": { "method": "GET", "url": "{{baseUrl}}/turnos" } },
+    { "name": "2 - Obtener por ID", "request": { "method": "GET", "url": "{{baseUrl}}/turnos/102" } },
+    {
+      "name": "3 - Crear turno",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"id\": 104,\n  \"paciente\": \"María López\",\n  \"documento\": \"30111222\",\n  \"especialidad\": \"Nutrición\",\n  \"fecha\": \"2026-08-20\",\n  \"hora\": \"09:00\",\n  \"confirmado\": true\n}" },
+        "url": "{{baseUrl}}/turnos"
+      }
+    },
+    {
+      "name": "4 - Actualizar turno",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": { "mode": "raw", "raw": "{\n  \"paciente\": \"María López\",\n  \"documento\": \"30111222\",\n  \"especialidad\": \"Nutrición\",\n  \"fecha\": \"2026-08-21\",\n  \"hora\": \"10:15\",\n  \"confirmado\": true,\n  \"observaciones\": \"Control\"\n}" },
+        "url": "{{baseUrl}}/turnos/104"
+      }
+    },
+    { "name": "5 - Eliminar turno", "request": { "method": "DELETE", "url": "{{baseUrl}}/turnos/104" } }
+  ]
+}
