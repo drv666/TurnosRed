@@ -27,6 +27,13 @@
       socket.on('turno:nuevo', (datos) => registrar('turno:nuevo', datos));
       socket.on('turno:actualizado', (datos) => registrar('turno:actualizado', datos));
       socket.on('turno:eliminado', (datos) => registrar('turno:eliminado', datos));
+      socket.on('connect', async () => {
+        if (!location.search.includes('demo=1')) return;
+        const turno = { id: 105, paciente: 'Laura Demo', documento: '27888777', especialidad: 'Clínica', fecha: '2026-09-04', hora: '14:00', confirmado: true };
+        await fetch('http://localhost:3000/turnos', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(turno) });
+        await fetch('http://localhost:3000/turnos/105', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ ...turno, hora: '14:30' }) });
+        await fetch('http://localhost:3000/turnos/105', { method: 'DELETE' });
+      });
     </script>
   </body>
 </html>

@@ -1,0 +1,100 @@
+{
+  "fecha": "2026-09-03T19:45:35.361Z",
+  "aprobadas": true,
+  "resultados": [
+    {
+      "nombre": "Obtener todos",
+      "metodo": "GET",
+      "url": "http://localhost:3000/turnos",
+      "estado": 200,
+      "duracionMs": 5,
+      "datos": [
+        {
+          "id": 102,
+          "paciente": "Carlos Ruiz",
+          "documento": "31654210",
+          "especialidad": "Pediatría",
+          "fecha": "2026-08-14",
+          "hora": "10:00",
+          "confirmado": true
+        },
+        {
+          "id": 103,
+          "paciente": "Ana Gómez",
+          "documento": "28999888",
+          "especialidad": "Odontología",
+          "fecha": "2026-08-15",
+          "hora": "11:30",
+          "confirmado": false,
+          "observaciones": "Primera consulta"
+        }
+      ]
+    },
+    {
+      "nombre": "Obtener por ID",
+      "metodo": "GET",
+      "url": "http://localhost:3000/turnos/102",
+      "estado": 200,
+      "duracionMs": 3,
+      "datos": {
+        "id": 102,
+        "paciente": "Carlos Ruiz",
+        "documento": "31654210",
+        "especialidad": "Pediatría",
+        "fecha": "2026-08-14",
+        "hora": "10:00",
+        "confirmado": true
+      }
+    },
+    {
+      "nombre": "Crear turno",
+      "metodo": "POST",
+      "url": "http://localhost:3000/turnos",
+      "estado": 201,
+      "duracionMs": 32,
+      "datos": {
+        "id": 104,
+        "paciente": "María López",
+        "documento": "30111222",
+        "especialidad": "Nutrición",
+        "fecha": "2026-08-20",
+        "hora": "09:00",
+        "confirmado": true
+      }
+    },
+    {
+      "nombre": "Actualizar turno",
+      "metodo": "PUT",
+      "url": "http://localhost:3000/turnos/104",
+      "estado": 200,
+      "duracionMs": 14,
+      "datos": {
+        "id": 104,
+        "paciente": "María López",
+        "documento": "30111222",
+        "especialidad": "Nutrición",
+        "fecha": "2026-08-21",
+        "hora": "10:15",
+        "confirmado": true,
+        "observaciones": "Control"
+      }
+    },
+    {
+      "nombre": "Eliminar turno",
+      "metodo": "DELETE",
+      "url": "http://localhost:3000/turnos/104",
+      "estado": 200,
+      "duracionMs": 3,
+      "datos": {
+        "id": 104,
+        "paciente": "María López",
+        "documento": "30111222",
+        "especialidad": "Nutrición",
+        "fecha": "2026-08-21",
+        "hora": "10:15",
+        "confirmado": true,
+        "observaciones": "Control"
+      }
+    }
+  ]
+}
