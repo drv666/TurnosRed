@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ejecución TurnosRed</title>
+    <style>
+      body { margin: 0; background: #1e1e1e; color: #dedede; font: 17px Consolas, monospace; }
+      header { padding: 18px 28px; background: #181818; border-bottom: 1px solid #444; }
+      h1 { margin: 0; color: #e3c07b; font-size: 22px; }
+      main { padding: 28px 36px; line-height: 1.7; }
+      .cmd { color: #e5e5e5; }
+      .ok { color: #6aef9d; }
+      .dato { color: #e3c07b; }
+    </style>
+  </head>
+  <body>
+    <header><h1>TurnosRed — sesión de ejecución y verificación</h1></header>
+    <main>
+      <div class="cmd">PS&gt; npm run lint</div>
+      <div class="ok">✓ ESLint finalizó sin errores</div><br />
+      <div class="cmd">PS&gt; npm run build</div>
+      <div class="ok">✓ TypeScript strict compiló correctamente</div><br />
+      <div class="cmd">PS&gt; npm start</div>
+      <div>Carga inicial: <span class="dato">2 aceptados</span>, <span class="dato">1 rechazado</span>.</div>
+      <div class="ok">TurnosRed disponible en http://localhost:3000</div>
+    </main>
+  </body>
+</html>

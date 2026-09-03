@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pruebas API - TurnosRed</title>
+    <style>
+      body { margin: 0; background: #1e1e1e; color: #d4d4d4; font: 16px Consolas, monospace; }
+      header { padding: 18px 28px; background: #181818; border-bottom: 1px solid #444; }
+      h1 { margin: 0; color: #e3c07b; font-size: 22px; }
+      main { padding: 24px 34px; }
+      .command { color: #e5e5e5; margin-bottom: 18px; }
+      table { border-collapse: collapse; width: 100%; max-width: 1000px; }
+      th, td { padding: 12px 14px; border-bottom: 1px solid #454545; text-align: left; }
+      th { color: #dcdcaa; }
+      .ok { color: #6aef9d; font-weight: bold; }
+      pre { color: #ce9178; line-height: 1.4; }
+    </style>
+  </head>
+  <body>
+    <header><h1>TurnosRed — ejecución de pruebas HTTP</h1></header>
+    <main>
+      <div class="command">PS&gt; node scripts/generar-evidencias.mjs</div>
+      <table>
+        <tr><th>Prueba</th><th>Método</th><th>Estado</th><th>Duración</th></tr>
+        <tr><td>Obtener todos</td><td>GET</td><td class="ok">200</td><td>5 ms</td></tr>
+        <tr><td>Obtener por ID</td><td>GET</td><td class="ok">200</td><td>3 ms</td></tr>
+        <tr><td>Crear turno</td><td>POST</td><td class="ok">201</td><td>32 ms</td></tr>
+        <tr><td>Actualizar turno</td><td>PUT</td><td class="ok">200</td><td>14 ms</td></tr>
+        <tr><td>Eliminar turno</td><td>DELETE</td><td class="ok">200</td><td>3 ms</td></tr>
+      </table>
+      <pre>Resultado general: APROBADO
+5 de 5 solicitudes respondieron con el código HTTP esperado.</pre>
+    </main>
+  </body>
+</html>
