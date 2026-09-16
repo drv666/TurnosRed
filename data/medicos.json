@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "nombre": "Médica de prueba",
+    "documento": "23456789",
+    "especialidad": "Nutrición",
+    "disponible": true
+  }
+]

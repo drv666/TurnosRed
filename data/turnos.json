@@ -1,30 +1,21 @@
 [
   {
-    "id": "102",
-    "paciente": "   Carlos Ruiz ",
-    "documento": 31654210,
-    "especialidad": "PEDIATRÍA",
-    "fecha": "14/08/2026",
-    "hora": "10.00",
-    "confirmado": "si"
+    "id": 102,
+    "paciente": "Carlos Ruiz",
+    "documento": "31654210",
+    "especialidad": "Pediatría",
+    "fecha": "2026-08-14",
+    "hora": "10:00",
+    "confirmado": true
   },
   {
     "id": 103,
     "paciente": "Ana Gómez",
     "documento": "28999888",
-    "especialidad": "odontología",
+    "especialidad": "Odontología",
     "fecha": "2026-08-15",
     "hora": "11:30",
     "confirmado": false,
     "observaciones": "Primera consulta"
-  },
-  {
-    "id": "dato-invalido",
-    "paciente": "Registro descartado",
-    "documento": 0,
-    "especialidad": "Clínica",
-    "fecha": "16/08/2026",
-    "hora": "9.00",
-    "confirmado": "no"
   }
 ]

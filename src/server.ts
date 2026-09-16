@@ -6,17 +6,26 @@ import { crearApp } from './app.js';
 import { turnosEvents } from './events/turnos.events.js';
 import type { Turno } from './models/turno.js';
 import { TurnosService } from './services/turnos.service.js';
+import { DoctorService } from './services/doctor.service.js';
 
 const puerto = Number(process.env.PORT ?? 3000);
 const archivo = path.resolve(
   process.cwd(),
   process.env.DATA_FILE ?? './data/turnos.json',
 );
-const service = new TurnosService(archivo);
+const doctors: DoctorService = new DoctorService(
+  path.resolve(
+    process.cwd(),
+    process.env.DOCTORS_FILE ?? './data/medicos.json',
+  ),
+  (id) => service.obtenerTodos().some((turno) => turno.medicoId === id),
+);
+const service: TurnosService = new TurnosService(archivo, doctors);
 
 try {
+  await doctors.load();
   await service.cargar();
-  const servidorHttp = createServer(crearApp(service));
+  const servidorHttp = createServer(crearApp(service, doctors));
   const io = new Server(servidorHttp, { cors: { origin: '*' } });
   turnosEvents.on('turno:creado', (turno: Turno) =>
     io.emit('turno:nuevo', turno),

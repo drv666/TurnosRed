@@ -5,10 +5,17 @@
       "name": "Depurar TurnosRed",
       "type": "node",
       "request": "launch",
-      "runtimeExecutable": "npm",
-      "runtimeArgs": ["run", "dev"],
-      "console": "integratedTerminal",
-      "skipFiles": ["<node_internals>/**"]
+      "runtimeExecutable": "node",
+      "runtimeArgs": [
+        "--import",
+        "tsx",
+        "src/server.ts"
+      ],
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "skipFiles": [
+        "<node_internals>/**"
+      ]
     }
   ]
 }

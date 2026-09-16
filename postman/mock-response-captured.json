@@ -1,0 +1,7 @@
+{
+  "capturedAt": "2026-09-16T13:22:58.7891557Z",
+  "source": "https://47320a5d-0b6d-44de-b5bb-9a45c5928fb9.mock.pstmn.io/medicos?especialidad=Nutrici%C3%B3n&disponible=true",
+  "body": "[\n  {\n    \"id\": 1,\n    \"nombre\": \"Médica de prueba\",\n    \"documento\": \"23456789\",\n    \"especialidad\": \"Nutrición\",\n    \"disponible\": true\n  }\n]",
+  "statusText": "OK",
+  "status": 200
+}

@@ -6,7 +6,25 @@ export default tseslint.config(
   ...tseslint.configs.recommended,
   { ignores: ['dist/**', 'node_modules/**'] },
   {
-    files: ['**/*.ts'],
+    files: ['src/**/*.ts'],
     languageOptions: { parserOptions: { project: './tsconfig.json' } },
+  },
+  {
+    files: ['scripts/**/*.mjs'],
+    languageOptions: {
+      globals: Object.fromEntries(
+        [
+          'process',
+          'Response',
+          'fetch',
+          'AbortSignal',
+          'structuredClone',
+          'console',
+          'URL',
+          'performance',
+        ].map((name) => [name, 'readonly']),
+      ),
+    },
+    rules: { 'no-empty': ['error', { allowEmptyCatch: true }] },
   },
 );

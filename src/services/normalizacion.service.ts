@@ -50,6 +50,9 @@ export const normalizarTurno = (crudo: TurnoCrudo): Turno | null => {
     especialidadOriginal.slice(1).toLocaleLowerCase('es');
   const observaciones = texto(crudo.observaciones);
   return {
+    ...(Number.isSafeInteger(crudo.medicoId) && Number(crudo.medicoId) > 0
+      ? { medicoId: Number(crudo.medicoId) }
+      : {}),
     id,
     paciente,
     documento,

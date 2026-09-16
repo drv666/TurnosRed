@@ -1,4 +1,5 @@
 export interface TurnoCrudo {
+  medicoId?: unknown;
   id?: unknown;
   paciente?: unknown;
   documento?: unknown;
@@ -10,6 +11,8 @@ export interface TurnoCrudo {
 }
 
 export interface Turno {
+  // Los registros históricos de API 1 pueden no tener un médico asignado.
+  medicoId?: number;
   id: number;
   paciente: string;
   documento: string;
