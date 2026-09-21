@@ -1,170 +1,116 @@
-# TurnosRed
+# TurnosRed API 3
 
-Entrega de API 2: https://github.com/drv666/TurnosRed/tree/api2
+Entrega: https://github.com/drv666/TurnosRed/tree/api3
 
-Informe editable: [Evidencias API 2 en Word](docs/Informe_evidencias_API2_TurnosRed.docx).
-La rama `main` conserva la entrega anterior; utilizar `api2` para esta actividad.
+[Informe PDF](docs/Informe_API3_TurnosRed.pdf) · [Word editable](docs/Informe_API3_TurnosRed.docx) · [Revisión de requisitos](docs/REVISION_API3.md)
 
-## Actividad práctica 2
-
-Primer paso implementado: validación Zod para POST y PUT de turnos, middleware
-de errores con `status`, `message`, `code` y `details`, y DELETE con 204 sin cuerpo.
-La copia local de M-2 utiliza `PORT=3002` para distinguirla de la API 1.
-También está implementado el CRUD `/medicos` y la relación `medicoId`.
-Los nuevos turnos requieren un médico existente, disponible y de la misma especialidad.
-Los registros históricos de API 1 pueden permanecer sin médico asignado.
-Los filtros por query están implementados. La colección completa está en
-`postman/turnos-red.postman_collection.json`, con su entorno en
-`postman/turnos-red.postman_environment.json`. Importar ambos, seleccionar el
-entorno **TurnosRed API 2** y ejecutar las 22 solicitudes en orden con Runner.
-La ejecución del 16/09/2026 completó **67 tests aprobados, 0 fallidos y 0 errores**,
-incluyendo la consulta real al Mock Server de Postman. Ver instrucciones en
-`postman/LEEME-API2.md`. El documento de evidencia contiene cinco páginas y
-se incluye en `docs/Informe_evidencias_API2_TurnosRed.docx`.
-
-### Filtros de búsqueda
-
-- `GET /medicos?especialidad=Nutrici%C3%B3n&disponible=true`
-- `GET /turnos?especialidad=Nutrici%C3%B3n&fecha=2026-09-20&medicoId=1`
-
-Todos los filtros son opcionales y se combinan: cada resultado debe cumplir todos
-los filtros enviados. `disponible` acepta `true` o `false`; `medicoId` debe ser
-un entero positivo y `fecha` una fecha válida AAAA-MM-DD. La especialidad debe
-coincidir con uno de los cuatro valores permitidos. Los parámetros desconocidos,
-repetidos o inválidos devuelven 400 con el formato uniforme de error.
-Sin coincidencias, la API devuelve 200 y un arreglo vacío.
-
-Pruebas de esta etapa:
-`node --import tsx --test --test-concurrency=1 tests/*.test.ts`.
-Estas pruebas de código no reemplazan las pruebas ni las evidencias de Postman.
-
-### Uso de Inteligencia Artificial
-
-Los prompts se resumen cuando la tarea se construyó en varios intercambios.
-Las frases entre comillas reproducen instrucciones del estudiante. Se distingue
-la implementación asistida de las acciones manuales y de las verificaciones.
-
-| Tarea | Herramienta | Prompt | Respuesta generada | Ajuste manual aplicado |
-| --- | --- | --- | --- | --- |
-| Validación de turnos | Codex | Continuar API 2 paso por paso y configurar la validación con Zod | Esquema, middleware de validación, errores centralizados y pruebas | Todavía sin ajustes manuales del estudiante. El asistente revisó los tipos, permitió omitir id en PUT y comprobó errores de campo, JSON inválido y respuestas HTTP con datos temporales. |
-| Recurso Médico y relación con Turno | Codex | Continuar los pasos de API 2 y preparar las pruebas del CRUD | Modelo, esquemas, rutas, controlador y servicio de médicos; validación de medicoId | El estudiante ejecutó las solicitudes indicadas y tomó capturas. La corrección de tipos y las pruebas de persistencia fueron realizadas por el asistente. |
-| Filtros de consulta | Codex | Continuar con los filtros requeridos por la consigna | Query schemas y filtros combinables en servicios de turnos y médicos | El estudiante recreó el médico de prueba al obtener una lista vacía y repitió la consulta. No se suprimió la aserción que exigía resultados. |
-| Scripts de Postman | Codex | "dame el codigo completo para reemplazar" | Tests de estado, filtros y esquema JSON en After response | El estudiante reemplazó el script y comprobó 3/3 pruebas aprobadas. Se conservaron los tests de estado y filtros junto con el de esquema. |
-| Ejemplos y Mock Server | Codex y Postman | "ejecutalo" y "adelante", después de explicar el ejemplo y el Mock Server | Respuesta guardada, servidor de simulación y consulta remota | El asistente configuró y comprobó la respuesta 200; el estudiante tomó la captura. |
-| Colección de entrega | Codex | Continuar con la revisión de los requisitos de API 2 | 22 solicitudes ordenadas, variables de entorno, ejemplos reales y 67 aserciones | El asistente importó y ejecutó la colección en Postman; el estudiante capturó el resultado 67/67. |
-
-
-Backend con Node.js, TypeScript, Express y Socket.IO para normalizar y gestionar turnos médicos.
-
-## Requisitos previos
-
-- Node.js 24 LTS; la versión usada se indica en `.nvmrc`.
-- npm (no usar otro manejador de paquetes).
+Actividad práctica de Integraciones Web: controladores de Especialidades y
+Profesionales, asincronismo, validaciones y respuestas HTTP.
 
 ## Instalación y ejecución
 
-```bash
-npm install
-copy .env.example .env
-npm run dev
+Requiere Node.js 24 y npm. Desde la carpeta del proyecto:
+
+```powershell
+npm.cmd ci
+Copy-Item .env.example .env
+npm.cmd run dev
 ```
 
-Para producción: `npm run build` y luego `npm start`.
-En PowerShell, si la política de ejecución bloquea `npm.ps1`, usar `npm.cmd`
-en lugar de `npm` en los comandos anteriores.
+La configuración de ejemplo usa http://localhost:3003.
+Si npm presenta problemas en PowerShell, después de instalar las dependencias:
 
-## Variables de entorno
+```powershell
+$env:PORT="3003"
+node --watch --import tsx src/server.ts
+```
 
-| Variable    | Descripción                   | Ejemplo              |
-| ----------- | ----------------------------- | -------------------- |
-| `PORT`      | Puerto HTTP del servidor      | `3002`               |
-| `DATA_FILE` | Ruta del JSON de persistencia | `./data/turnos.json` |
-| `DOCTORS_FILE` | Persistencia de médicos | `./data/medicos.json` |
+Compilación: `npm.cmd run build`. Ejecución compilada: `npm.cmd start`.
 
-## Scripts
+## Arquitectura de API 3
 
-- `npm run dev`: ejecuta y recarga el servidor durante el desarrollo.
-- `npm run build`: compila TypeScript desde `src/` hacia `dist/`.
-- `npm test`: ejecuta las pruebas de validación e integración con datos temporales.
-- `npm start`: ejecuta la versión compilada.
-- `npm run lint`: analiza los archivos TypeScript.
-- `npm run format`: aplica Prettier.
-- `npm run format:check`: verifica el formato.
+- src/routes: conecta endpoints con métodos de los controladores.
+- src/controllers/especialidades.controller.ts y profesionales.controller.ts:
+  validaciones de entrada, métodos async, variable status, try-catch y return explícito.
+- src/controllers/general.controller.ts: bienvenida y rutas inexistentes.
+- src/services: operaciones sobre arreglos, nombres y matrículas únicos, validación
+  de existencia de la especialidad asociada a un profesional.
+- src/models: interfaces de las entidades.
+- src/data: JSON inicial de especialidades y profesionales.
 
-## API REST
+Estas dos entidades se mantienen en memoria. Sus modificaciones se pierden al
+reiniciar y no sobrescriben los JSON iniciales. Los controladores validan IDs y
+cuerpos antes de solicitar operaciones al servicio. Los errores se devuelven
+como {status, message, code, details}. DELETE 204 termina sin cuerpo.
 
-| Método | Ruta          | Resultado                           |
-| ------ | ------------- | ----------------------------------- |
-| GET    | `/turnos`     | Lista todos (`200`)                 |
-| GET    | `/turnos/:id` | Obtiene uno (`200`, `400`, `404`)   |
-| POST   | `/turnos`     | Crea uno (`201`, `400`, `404` si no existe el médico) |
-| PUT    | `/turnos/:id` | Actualiza uno (`200`, `400`, `404`) |
-| DELETE | `/turnos/:id` | Elimina uno (`204`, `400`, `404`)   |
-| GET | `/medicos` | Lista médicos (`200`) |
-| GET | `/medicos/:id` | Obtiene un médico (`200`, `400`, `404`) |
-| POST | `/medicos` | Crea un médico (`201`, `400`) |
-| PUT | `/medicos/:id` | Actualiza un médico (`200`, `400`, `404`) |
-| DELETE | `/medicos/:id` | Elimina un médico sin turnos asociados (`204`, `400`, `404`) |
+## Endpoints de API 3
 
-Ejemplo para POST/PUT:
+| Método | Ruta | Respuesta exitosa |
+| --- | --- | --- |
+| GET | / | 200, bienvenida |
+| GET | /especialidades | 200, arreglo |
+| GET | /especialidades/:id | 200, especialidad |
+| POST | /especialidades | 201, especialidad creada |
+| PUT | /especialidades/:id | 200, especialidad actualizada |
+| DELETE | /especialidades/:id | 204, sin cuerpo |
+| GET | /profesionales | 200, arreglo |
+| GET | /profesionales/:id | 200, profesional |
+| POST | /profesionales | 201, profesional creado |
+| PUT | /profesionales/:id | 200, profesional actualizado |
+| DELETE | /profesionales/:id | 204, sin cuerpo |
+
+Ruta desconocida o recurso ausente: 404. ID, cuerpo o tipo inválido: 400.
+Especialidad asociada inexistente o matrícula duplicada: 400.
+Fallo inesperado: 500 sin exponer detalles internos.
+
+Cuerpo POST/PUT de especialidad: `{"nombre":"Cardiología"}`.
+Cuerpo POST/PUT de profesional:
 
 ```json
-{
-  "id": 104,
-  "medicoId": 1,
-  "paciente": " María López ",
-  "documento": "30111222",
-  "especialidad": "Nutrición",
-  "fecha": "2026-09-20",
-  "hora": "09:00",
-  "confirmado": true,
-  "observaciones": "Control"
-}
+{"nombre":"Profesional de prueba","matricula":"DEMO-002","especialidadId":2}
 ```
 
-Los cambios se persisten en el JSON configurado y los errores inesperados responden `500`.
+El ID se genera al crear y se toma de la ruta al actualizar.
 
-Los errores utilizan `{ "status": 400, "message": "...", "code": "VALIDATION_ERROR", "details": [] }`.
-Zod incluye en `details` el campo, el mensaje y el código del problema. El
-código 500 se verificó mediante un fallo controlado en las pruebas HTTP de
-código; no se incorpora una ruta de fallo artificial a la API.
+## Pruebas en Postman
 
-### Variables y ejecución en Postman
+Importar postman/turnos-red-api3-completa.postman_collection.json y ejecutar las
+47 solicitudes en orden, con una iteración. La colección contiene su propia
+variable api3BaseUrl (puerto 3003), por lo que no requiere un entorno externo.
+Ver postman/LEEME-API3.md.
 
-El entorno exportado contiene `baseUrl` (API local en el puerto 3002),
-`mockUrl` (servidor de Postman), `medicoId` y `turnoId` (generados al ejecutar
-la primera solicitud). `token` queda vacío: esta actividad no implementa
-autenticación, por lo que no se envía un encabezado Authorization ficticio.
-Ejecutar la colección en orden con una iteración. Sus solicitudes de limpieza
-eliminan solo los registros de esa ejecución; los ejemplos guardados quedan
-disponibles. El Mock Server sirve ejemplos y no reemplaza las pruebas reales.
+Resultado observado el 21/09/2026: **117 pruebas aprobadas, 0 fallidas,
+0 omitidas y 0 errores**. La colección crea sus propios registros ficticios,
+verifica happy y unhappy paths y los elimina al terminar.
 
-Ejemplo POST `/medicos`: `{"id":1,"nombre":"Médica de prueba","documento":"23456789","especialidad":"Nutrición","disponible":true}`.
-En PUT se puede omitir `id`; si se incluye, debe coincidir con la URL.
+## Pruebas de código
 
-## Eventos en tiempo real
-
-El bus interno emite `turno:creado`, `turno:actualizado` y `turno:eliminado`. Socket.IO retransmite `turno:nuevo`, `turno:actualizado` y `turno:eliminado`.
-
-```js
-import { io } from 'socket.io-client';
-const socket = io('http://localhost:3002');
-socket.on('turno:nuevo', console.log);
-socket.on('turno:actualizado', console.log);
-socket.on('turno:eliminado', console.log);
+```powershell
+npm.cmd test
+node node_modules/typescript/bin/tsc --noEmit
 ```
 
-## Estructura
+Las pruebas HTTP usan servidores y datos aislados. Para ejecutar la suite nueva
+sin procesos secundarios del runner:
 
-```text
-src/
-├── controllers/  # Capa HTTP
-├── events/       # Bus EventEmitter
-├── models/       # Interfaces
-├── routes/       # Endpoints
-├── schemas/      # Validaciones Zod de cuerpos y query parameters
-├── middleware/   # Validación y errores uniformes
-├── services/     # Normalización, persistencia y lógica
-├── app.ts        # Express
-└── server.ts     # HTTP, Socket.IO y arranque
+```powershell
+node --import tsx tests/general-http.test.ts
+node --import tsx tests/especialidades-http.test.ts
+node --import tsx tests/profesionales-http.test.ts
 ```
+
+## Compatibilidad con API 2
+
+Se conservan /turnos y /medicos, sus validaciones, persistencia JSON en data y
+eventos Socket.IO. Su modelo Médico no es el recurso Profesional de API 3.
+La colección completa incorpora 21 solicitudes de regresión de estas rutas.
+Todos los métodos de los controladores heredados también usan async, status, try-catch y return. Los documentos y colecciones antiguos conservados en el repositorio
+corresponden a entregas anteriores.
+
+## Evidencias y asistencia
+
+La carpeta de entrega M-3/Entrega contiene el informe de evidencias en PDF y Word.
+Se incluyen 20 capturas: pruebas individuales y resultado integrado del Runner.
+Codex asistió en código, pruebas y documentación; Darío tomó las capturas durante
+la revisión paso a paso. No se implementó una base de datos para las entidades
+nuevas ni se afirma que sus datos sobrevivan al reinicio.

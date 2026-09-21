@@ -1,0 +1,711 @@
+{
+  "info": {
+    "name": "TurnosRed API 3 - Verificación",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Ejecutar completa en orden, una iteración. Crea datos ficticios propios y los elimina al terminar. Puerto 3003. Las respuestas 400 y 404 son esperadas en los casos negativos."
+  },
+  "variable": [
+    {
+      "key": "api3BaseUrl",
+      "value": "http://localhost:3003"
+    },
+    {
+      "key": "api3Run",
+      "value": ""
+    },
+    {
+      "key": "api3EspecialidadId",
+      "value": ""
+    },
+    {
+      "key": "api3ProfesionalId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "01 Bienvenida",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{api3BaseUrl}}/"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Datos esperados\", () => pm.expect(pm.response.json().message).to.eql(\"Hello World - Bienvenido a TurnosRed API 3\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 Ruta inexistente",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{api3BaseUrl}}/ruta-inexistente-api3"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(404); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "03 Listar especialidades",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{api3BaseUrl}}/especialidades"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Lista JSON\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "04 Crear especialidad",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{api3BaseUrl}}/especialidades",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nombre\":\"Prueba API3 {{api3Run}}\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.collectionVariables.set(\"api3Run\", Date.now().toString());"
+            ]
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+              "pm.test(\"Especialidad creada\", () => { const e=pm.response.json(); pm.expect(e.id).to.be.a(\"number\").above(0); pm.expect(e.nombre).to.eql(\"Prueba API3 \"+pm.collectionVariables.get(\"api3Run\")); pm.collectionVariables.set(\"api3EspecialidadId\",e.id); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "05 Consultar especialidad creada",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{api3BaseUrl}}/especialidades/{{api3EspecialidadId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Datos esperados\", () => pm.expect(pm.response.json().id).to.eql(Number(pm.collectionVariables.get(\"api3EspecialidadId\"))));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "06 Actualizar especialidad",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{api3BaseUrl}}/especialidades/{{api3EspecialidadId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nombre\":\"Actualizada API3 {{api3Run}}\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Datos esperados\", () => pm.expect(pm.response.json().nombre).to.eql(\"Actualizada API3 \"+pm.collectionVariables.get(\"api3Run\")));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "07 Especialidad sin nombre",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{api3BaseUrl}}/especialidades",
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(400); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "08 Especialidad con tipo inválido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{api3BaseUrl}}/especialidades",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nombre\":123}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(400); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "09 Especialidad ID inválido",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{api3BaseUrl}}/especialidades/abc"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(400); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "10 Especialidad inexistente",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{api3BaseUrl}}/especialidades/999999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(404); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "11 Listar profesionales",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{api3BaseUrl}}/profesionales"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Lista JSON\", () => pm.expect(pm.response.json()).to.be.an(\"array\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "12 Crear profesional asociado",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{api3BaseUrl}}/profesionales",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nombre\":\"Profesional API3\",\"matricula\":\"API3-{{api3Run}}\",\"especialidadId\":{{api3EspecialidadId}}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 201\", () => pm.response.to.have.status(201));",
+              "pm.test(\"Profesional asociado\", () => { const p=pm.response.json(); pm.expect(p.id).to.be.a(\"number\").above(0); pm.expect(p.especialidadId).to.eql(Number(pm.collectionVariables.get(\"api3EspecialidadId\"))); pm.collectionVariables.set(\"api3ProfesionalId\",p.id); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "13 Consultar profesional creado",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{api3BaseUrl}}/profesionales/{{api3ProfesionalId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Datos esperados\", () => pm.expect(pm.response.json().id).to.eql(Number(pm.collectionVariables.get(\"api3ProfesionalId\"))));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "14 Actualizar profesional",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{api3BaseUrl}}/profesionales/{{api3ProfesionalId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nombre\":\"Profesional actualizado API3\",\"matricula\":\"API3-{{api3Run}}\",\"especialidadId\":{{api3EspecialidadId}}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Datos esperados\", () => pm.expect(pm.response.json().nombre).to.eql(\"Profesional actualizado API3\"));",
+              "pm.test(\"Datos esperados\", () => pm.expect(pm.response.json().id).to.eql(Number(pm.collectionVariables.get(\"api3ProfesionalId\"))));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "15 Matrícula duplicada",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{api3BaseUrl}}/profesionales",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nombre\":\"Profesional API3\",\"matricula\":\"API3-{{api3Run}}\",\"especialidadId\":{{api3EspecialidadId}}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(400); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "16 Matrícula ausente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{api3BaseUrl}}/profesionales",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nombre\":\"Prueba\",\"especialidadId\":{{api3EspecialidadId}}}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(400); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "17 Tipo de especialidad inválido",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{api3BaseUrl}}/profesionales",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nombre\":\"Prueba\",\"matricula\":\"TIPO\",\"especialidadId\":\"2\"}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(400); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "18 Especialidad asociada inexistente",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{api3BaseUrl}}/profesionales",
+        "body": {
+          "mode": "raw",
+          "raw": "{\"nombre\":\"Prueba\",\"matricula\":\"INEXISTENTE\",\"especialidadId\":999999999}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(400); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "19 Actualizar con cuerpo incompleto",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": "{{api3BaseUrl}}/profesionales/{{api3ProfesionalId}}",
+        "body": {
+          "mode": "raw",
+          "raw": "{}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        }
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(400); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "20 Validación no modifica el registro",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{api3BaseUrl}}/profesionales/{{api3ProfesionalId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 200\", () => pm.response.to.have.status(200));",
+              "pm.test(\"Datos esperados\", () => pm.expect(pm.response.json().nombre).to.eql(\"Profesional actualizado API3\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "21 Profesional ID inválido",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{api3BaseUrl}}/profesionales/abc"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 400\", () => pm.response.to.have.status(400));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(400); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "22 Profesional inexistente",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{api3BaseUrl}}/profesionales/999999999"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(404); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "23 Eliminar profesional de esta ejecución",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{api3BaseUrl}}/profesionales/{{api3ProfesionalId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 204\", () => pm.response.to.have.status(204));",
+              "pm.test(\"Datos esperados\", () => pm.expect(pm.response.text()).to.eql(\"\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "24 Consultar profesional eliminado",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{api3BaseUrl}}/profesionales/{{api3ProfesionalId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(404); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "25 Eliminar especialidad de esta ejecución",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": "{{api3BaseUrl}}/especialidades/{{api3EspecialidadId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 204\", () => pm.response.to.have.status(204));",
+              "pm.test(\"Datos esperados\", () => pm.expect(pm.response.text()).to.eql(\"\"));"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "26 Consultar especialidad eliminada",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{api3BaseUrl}}/especialidades/{{api3EspecialidadId}}"
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"HTTP 404\", () => pm.response.to.have.status(404));",
+              "pm.test(\"Error JSON coherente\", () => { const e=pm.response.json(); pm.expect(e.status).to.eql(404); pm.expect(e.message).to.be.a(\"string\").and.not.empty; pm.expect(e.code).to.be.a(\"string\"); pm.expect(e.details).to.be.an(\"array\"); });"
+            ]
+          }
+        }
+      ]
+    }
+  ]
+}

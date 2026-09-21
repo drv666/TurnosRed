@@ -1,5 +1,5 @@
 import type { Request, Response } from 'express';
-import { ApiError } from '../middleware/error-handler.js';
+import { ApiError, describeError } from '../middleware/error-handler.js';
 import type { DoctorService } from '../services/doctor.service.js';
 import { doctorQuerySchema } from '../schemas/query.schema.js';
 
@@ -19,20 +19,69 @@ const readId = (req: Request): number => {
 
 export class DoctorController {
   constructor(private readonly service: DoctorService) {}
-  list = (req: Request, res: Response): void => {
-    res.status(200).json(this.service.list(doctorQuerySchema.parse(req.query)));
+
+  list = async (req: Request, res: Response): Promise<Response> => {
+    let status = 500;
+    try {
+      const datos = this.service.list(doctorQuerySchema.parse(req.query));
+      status = 200;
+      return res.status(status).json(datos);
+    } catch (error: unknown) {
+      const body = describeError(error);
+      status = body.status;
+      return res.status(status).json(body);
+    }
   };
-  get = (req: Request, res: Response): void => {
-    res.status(200).json(this.service.get(readId(req)));
+
+  get = async (req: Request, res: Response): Promise<Response> => {
+    let status = 500;
+    try {
+      const datos = this.service.get(readId(req));
+      status = 200;
+      return res.status(status).json(datos);
+    } catch (error: unknown) {
+      const body = describeError(error);
+      status = body.status;
+      return res.status(status).json(body);
+    }
   };
-  create = async (req: Request, res: Response): Promise<void> => {
-    res.status(201).json(await this.service.create(req.body));
+
+  create = async (req: Request, res: Response): Promise<Response> => {
+    let status = 500;
+    try {
+      const datos = await this.service.create(req.body);
+      status = 201;
+      return res.status(status).json(datos);
+    } catch (error: unknown) {
+      const body = describeError(error);
+      status = body.status;
+      return res.status(status).json(body);
+    }
   };
-  update = async (req: Request, res: Response): Promise<void> => {
-    res.status(200).json(await this.service.update(readId(req), req.body));
+
+  update = async (req: Request, res: Response): Promise<Response> => {
+    let status = 500;
+    try {
+      const datos = await this.service.update(readId(req), req.body);
+      status = 200;
+      return res.status(status).json(datos);
+    } catch (error: unknown) {
+      const body = describeError(error);
+      status = body.status;
+      return res.status(status).json(body);
+    }
   };
-  delete = async (req: Request, res: Response): Promise<void> => {
-    await this.service.delete(readId(req));
-    res.status(204).end();
+
+  delete = async (req: Request, res: Response): Promise<Response> => {
+    let status = 500;
+    try {
+      await this.service.delete(readId(req));
+      status = 204;
+      return res.status(status).end();
+    } catch (error: unknown) {
+      const body = describeError(error);
+      status = body.status;
+      return res.status(status).json(body);
+    }
   };
 }

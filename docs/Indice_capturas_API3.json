@@ -1,0 +1,142 @@
+[
+  {
+    "numero": 1,
+    "archivo": "Captura de pantalla 2026-09-21 152120.png",
+    "titulo": "Bienvenida",
+    "solicitud": "GET /",
+    "resultado": "200 OK"
+  },
+  {
+    "numero": 2,
+    "archivo": "Captura de pantalla 2026-09-21 152335.png",
+    "titulo": "Ruta no encontrada",
+    "solicitud": "GET /ruta-inexistente",
+    "resultado": "404 Not Found"
+  },
+  {
+    "numero": 3,
+    "archivo": "Captura de pantalla 2026-09-21 153135.png",
+    "titulo": "Listado de especialidades",
+    "solicitud": "GET /especialidades",
+    "resultado": "200 OK"
+  },
+  {
+    "numero": 4,
+    "archivo": "Captura de pantalla 2026-09-21 153450.png",
+    "titulo": "Consulta de una especialidad",
+    "solicitud": "GET /especialidades/2",
+    "resultado": "200 OK"
+  },
+  {
+    "numero": 5,
+    "archivo": "Captura de pantalla 2026-09-21 153640.png",
+    "titulo": "Especialidad inexistente",
+    "solicitud": "GET /especialidades/999",
+    "resultado": "404 Not Found"
+  },
+  {
+    "numero": 6,
+    "archivo": "Captura de pantalla 2026-09-21 153819.png",
+    "titulo": "Identificador inválido",
+    "solicitud": "GET /especialidades/abc",
+    "resultado": "400 Bad Request"
+  },
+  {
+    "numero": 7,
+    "archivo": "Captura de pantalla 2026-09-21 154041.png",
+    "titulo": "Creación de especialidad",
+    "solicitud": "POST /especialidades",
+    "resultado": "201 Created"
+  },
+  {
+    "numero": 8,
+    "archivo": "Captura de pantalla 2026-09-21 154241.png",
+    "titulo": "Cuerpo incompleto",
+    "solicitud": "POST /especialidades",
+    "resultado": "400 Bad Request"
+  },
+  {
+    "numero": 9,
+    "archivo": "Captura de pantalla 2026-09-21 154513.png",
+    "titulo": "Actualización de especialidad",
+    "solicitud": "PUT /especialidades/4",
+    "resultado": "200 OK"
+  },
+  {
+    "numero": 10,
+    "archivo": "Captura de pantalla 2026-09-21 154710.png",
+    "titulo": "Eliminación de especialidad",
+    "solicitud": "DELETE /especialidades/4",
+    "resultado": "204 No Content"
+  },
+  {
+    "numero": 11,
+    "archivo": "Captura de pantalla 2026-09-21 154955.png",
+    "titulo": "Listado de profesionales",
+    "solicitud": "GET /profesionales",
+    "resultado": "200 OK"
+  },
+  {
+    "numero": 12,
+    "archivo": "Captura de pantalla 2026-09-21 155356.png",
+    "titulo": "Consulta de un profesional",
+    "solicitud": "GET /profesionales/1",
+    "resultado": "200 OK"
+  },
+  {
+    "numero": 13,
+    "archivo": "Captura de pantalla 2026-09-21 155620.png",
+    "titulo": "Profesional inexistente",
+    "solicitud": "GET /profesionales/999",
+    "resultado": "404 Not Found"
+  },
+  {
+    "numero": 14,
+    "archivo": "Captura de pantalla 2026-09-21 160255.png",
+    "titulo": "Creación de profesional",
+    "solicitud": "POST /profesionales",
+    "resultado": "201 Created"
+  },
+  {
+    "numero": 15,
+    "archivo": "Captura de pantalla 2026-09-21 160642.png",
+    "titulo": "Matrícula obligatoria",
+    "solicitud": "POST /profesionales",
+    "resultado": "400 Bad Request"
+  },
+  {
+    "numero": 16,
+    "archivo": "Captura de pantalla 2026-09-21 161111.png",
+    "titulo": "Actualización de profesional",
+    "solicitud": "PUT /profesionales/1",
+    "resultado": "200 OK"
+  },
+  {
+    "numero": 17,
+    "archivo": "Captura de pantalla 2026-09-21 161429.png",
+    "titulo": "Eliminación de profesional",
+    "solicitud": "DELETE /profesionales/1",
+    "resultado": "204 No Content"
+  },
+  {
+    "numero": 18,
+    "archivo": "Captura de pantalla 2026-09-21 161543.png",
+    "titulo": "Consulta después de eliminar",
+    "solicitud": "GET /profesionales/1",
+    "resultado": "404 Not Found"
+  },
+  {
+    "numero": 19,
+    "archivo": "Captura de pantalla 2026-09-21 162103.png",
+    "titulo": "Ejecución de la colección",
+    "solicitud": "Runner de Postman",
+    "resultado": "53 aprobadas y 0 fallidas"
+  },
+  {
+    "numero": 20,
+    "archivo": "Captura de pantalla 2026-09-21 170435.png",
+    "titulo": "Verificación final con regresión",
+    "solicitud": "Runner de Postman sobre la versión compilada",
+    "resultado": "117 aprobadas y 0 fallidas"
+  }
+]

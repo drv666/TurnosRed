@@ -1,7 +1,7 @@
-import type { NextFunction, Request, Response } from 'express';
+import type { Request, Response } from 'express';
 import type { TurnoCrudo } from '../models/turno.js';
 import type { TurnosService } from '../services/turnos.service.js';
-import { ApiError } from '../middleware/error-handler.js';
+import { ApiError, describeError } from '../middleware/error-handler.js';
 import { appointmentQuerySchema } from '../schemas/query.schema.js';
 
 const idValido = (valor: unknown): number | null => {
@@ -13,31 +13,42 @@ const idValido = (valor: unknown): number | null => {
 export class TurnosController {
   constructor(private readonly service: TurnosService) {}
 
-  listar = (req: Request, res: Response): void => {
-    res
-      .status(200)
-      .json(this.service.obtenerTodos(appointmentQuerySchema.parse(req.query)));
+  listar = async (req: Request, res: Response): Promise<Response> => {
+    let status = 500;
+    try {
+      const datos = this.service.obtenerTodos(
+        appointmentQuerySchema.parse(req.query),
+      );
+      status = 200;
+      return res.status(status).json(datos);
+    } catch (error: unknown) {
+      const body = describeError(error);
+      status = body.status;
+      return res.status(status).json(body);
+    }
   };
 
-  obtener = (req: Request, res: Response): void => {
-    const id = idValido(req.params.id ?? '');
-    if (id === null) {
-      throw new ApiError(400, 'ID inválido', 'VALIDATION_ERROR', [
-        { field: 'id', message: 'Debe ser un entero positivo' },
-      ]);
+  obtener = async (req: Request, res: Response): Promise<Response> => {
+    let status = 500;
+    try {
+      const id = idValido(req.params.id);
+      if (id === null)
+        throw new ApiError(400, 'ID inválido', 'VALIDATION_ERROR', [
+          { field: 'id', message: 'Debe ser un entero positivo' },
+        ]);
+      const turno = this.service.obtenerPorId(id);
+      if (!turno) throw new ApiError(404, 'Turno no encontrado', 'NOT_FOUND');
+      status = 200;
+      return res.status(status).json(turno);
+    } catch (error: unknown) {
+      const body = describeError(error);
+      status = body.status;
+      return res.status(status).json(body);
     }
-    const turno = this.service.obtenerPorId(id);
-    if (!turno) {
-      throw new ApiError(404, 'Turno no encontrado', 'NOT_FOUND');
-    }
-    res.status(200).json(turno);
   };
 
-  crear = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  crear = async (req: Request, res: Response): Promise<Response> => {
+    let status = 500;
     try {
       const turno = await this.service.crear(req.body as TurnoCrudo);
       if (!turno) {
@@ -47,17 +58,17 @@ export class TurnosController {
           'VALIDATION_ERROR',
         );
       }
-      res.status(201).json(turno);
+      status = 201;
+      return res.status(status).json(turno);
     } catch (error) {
-      next(error);
+      const body = describeError(error);
+      status = body.status;
+      return res.status(status).json(body);
     }
   };
 
-  actualizar = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  actualizar = async (req: Request, res: Response): Promise<Response> => {
+    let status = 500;
     try {
       const id = idValido(req.params.id ?? '');
       if (id === null) {
@@ -80,17 +91,17 @@ export class TurnosController {
       if (turno === null) {
         throw new ApiError(400, 'Datos inválidos', 'VALIDATION_ERROR');
       }
-      res.status(200).json(turno);
+      status = 200;
+      return res.status(status).json(turno);
     } catch (error) {
-      next(error);
+      const body = describeError(error);
+      status = body.status;
+      return res.status(status).json(body);
     }
   };
 
-  eliminar = async (
-    req: Request,
-    res: Response,
-    next: NextFunction,
-  ): Promise<void> => {
+  eliminar = async (req: Request, res: Response): Promise<Response> => {
+    let status = 500;
     try {
       const id = idValido(req.params.id ?? '');
       if (id === null) {
@@ -102,9 +113,12 @@ export class TurnosController {
       if (!turno) {
         throw new ApiError(404, 'Turno no encontrado', 'NOT_FOUND');
       }
-      res.status(204).end();
+      status = 204;
+      return res.status(status).end();
     } catch (error) {
-      next(error);
+      const body = describeError(error);
+      status = body.status;
+      return res.status(status).json(body);
     }
   };
 }

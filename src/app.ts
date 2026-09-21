@@ -6,9 +6,17 @@ import express, {
 import { TurnosController } from './controllers/turnos.controller.js';
 import { crearTurnosRouter } from './routes/turnos.routes.js';
 import type { TurnosService } from './services/turnos.service.js';
-import { ApiError, errorHandler } from './middleware/error-handler.js';
+import { errorHandler } from './middleware/error-handler.js';
+import {
+  bienvenida,
+  rutaNoEncontrada,
+} from './controllers/general.controller.js';
 import type { DoctorService } from './services/doctor.service.js';
 import { createDoctorRouter } from './routes/doctor.routes.js';
+import { crearEspecialidadesRouter } from './routes/especialidades.routes.js';
+import { crearProfesionalesRouter } from './routes/profesionales.routes.js';
+import { EspecialidadesService } from './services/especialidades.service.js';
+import { ProfesionalesService } from './services/profesionales.service.js';
 
 export const crearApp = (
   service: TurnosService,
@@ -22,11 +30,14 @@ export const crearApp = (
     next();
   });
   app.use(express.json());
+  app.get('/', bienvenida);
+  const especialidades = new EspecialidadesService();
+  const profesionales = new ProfesionalesService(especialidades);
+  app.use('/especialidades', crearEspecialidadesRouter(especialidades));
+  app.use('/profesionales', crearProfesionalesRouter(profesionales));
   app.use('/turnos', crearTurnosRouter(new TurnosController(service)));
   if (doctors) app.use('/medicos', createDoctorRouter(doctors));
-  app.use((_req: Request, _res: Response, next: NextFunction) =>
-    next(new ApiError(404, 'Ruta no encontrada', 'NOT_FOUND')),
-  );
+  app.use(rutaNoEncontrada);
   app.use(errorHandler);
   return app;
 };

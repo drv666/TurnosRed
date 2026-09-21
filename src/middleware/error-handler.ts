@@ -12,18 +12,9 @@ export class ApiError extends Error {
   }
 }
 
-export const errorHandler: ErrorRequestHandler = (
-  error: unknown,
-  _req,
-  res,
-  next,
-) => {
-  if (res.headersSent) {
-    next(error);
-    return;
-  }
-  if (error instanceof ZodError) {
-    res.status(400).json({
+export const describeError = (error: unknown) => {
+  if (error instanceof ZodError)
+    return {
       status: 400,
       message: 'Error de validación en los datos ingresados',
       code: 'VALIDATION_ERROR',
@@ -32,36 +23,41 @@ export const errorHandler: ErrorRequestHandler = (
         message: issue.message,
         code: issue.code,
       })),
-    });
-    return;
-  }
-  if (error instanceof ApiError) {
-    res.status(error.status).json({
+    };
+  if (error instanceof ApiError)
+    return {
       status: error.status,
       message: error.message,
       code: error.code,
       details: error.details,
-    });
-    return;
-  }
+    };
   if (
     error instanceof SyntaxError &&
     'type' in error &&
     error.type === 'entity.parse.failed'
-  ) {
-    res.status(400).json({
+  )
+    return {
       status: 400,
       message: 'El cuerpo no contiene JSON válido',
       code: 'INVALID_JSON',
       details: [],
-    });
-    return;
-  }
-  console.error(error);
-  res.status(500).json({
+    };
+  return {
     status: 500,
     message: 'Error interno del servidor',
     code: 'INTERNAL_ERROR',
     details: [],
-  });
+  };
+};
+
+export const errorHandler: ErrorRequestHandler = (
+  error: unknown,
+  _req,
+  res,
+  next,
+) => {
+  if (res.headersSent) return next(error);
+  const body = describeError(error);
+  if (body.status === 500) console.error(error);
+  return res.status(body.status).json(body);
 };

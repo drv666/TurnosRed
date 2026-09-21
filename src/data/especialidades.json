@@ -1,0 +1,6 @@
+[
+  { "id": 1, "nombre": "Clínica médica" },
+  { "id": 2, "nombre": "Pediatría" },
+  { "id": 3, "nombre": "Odontología" },
+  { "id": 4, "nombre": "Nutrición" }
+]
