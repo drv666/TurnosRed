@@ -1,0 +1,32 @@
+Actividad 4 - 21/09/2026
+
+TypeScript build: aprobado.
+ESLint: aprobado.
+Postman nativo: 47 solicitudes; 117 aserciones aprobadas, 0 fallidas, 0 omitidas, 0 errores.
+baseUrl: http://localhost:3004; entorno: none.
+Ver capturas-api4 para evidencia de ejecución.
+
+Pruebas automatizadas con datos aislados:
+✔ acepta un turno válido y limpia los espacios del paciente (4.458ms)
+✔ rechaza un valor inválido en documento e identifica el campo (0.8437ms)
+✔ rechaza un valor inválido en especialidad e identifica el campo (0.2666ms)
+✔ rechaza un valor inválido en fecha e identifica el campo (179.6827ms)
+✔ rechaza un valor inválido en hora e identifica el campo (6.7053ms)
+✔ rechaza un valor inválido en id e identifica el campo (0.4175ms)
+✔ rechaza un valor inválido en confirmado e identifica el campo (0.1758ms)
+✔ rechaza un valor inválido en paciente e identifica el campo (0.1975ms)
+Carga inicial: 0 aceptados, 0 rechazados.
+✔ CRUD de médicos, persistencia y relación con turnos (194.9734ms)
+✔ CRUD de especialidades en memoria y validaciones HTTP (33.2113ms)
+✔ bienvenida y rutas inexistentes desde el controlador general (8.1794ms)
+✔ Profesionales: consultas, creación, actualización, eliminación y validaciones (37.6261ms)
+Carga inicial: 0 aceptados, 0 rechazados.
+✔ validación HTTP, errores uniformes y CRUD sin modificar los datos del proyecto (34.8755ms)
+ℹ tests 13
+ℹ suites 0
+ℹ pass 13
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 622.5807
