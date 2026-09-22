@@ -124,13 +124,35 @@ Body POST/PUT obligatorio:
 
 nombre debe ser string no vacío después de trim y único sin distinguir mayúsculas. El ID se genera al crear. Los campos adicionales se ignoran; id del body no cambia el ID del path.
 
-| Método y path | Función | Params | Query | Body | Éxito | Errores propios |
-| --- | --- | --- | --- | --- | --- | --- |
-| GET /especialidades | Listar | Ninguno | Ninguna | Ninguno | 200 Especialidad[] | 500 |
-| GET /especialidades/:id | Consultar una | id positivo | Ninguna | Ninguno | 200 Especialidad | 400 ID inválido; 404 ausente |
-| POST /especialidades | Crear | Ninguno | Ninguna | nombre | 201 Especialidad | 400 VALIDATION_ERROR o DUPLICATE_SPECIALTY |
-| PUT /especialidades/:id | Reemplazar nombre | id positivo | Ninguna | nombre | 200 Especialidad | 400 entrada inválida o duplicado; 404 ausente |
-| DELETE /especialidades/:id | Eliminar | id positivo | Ninguna | Ninguno | 204 sin cuerpo | 400 ID inválido; 404 ausente |
+#### GET /especialidades
+
+Listar. Params: Ninguno. Query: Ninguna. Body: Ninguno.
+
+Respuesta: **200 Especialidad[]**. Errores: 500.
+
+#### GET /especialidades/:id
+
+Consultar una. Params: id positivo. Query: Ninguna. Body: Ninguno.
+
+Respuesta: **200 Especialidad**. Errores: 400 ID inválido; 404 ausente.
+
+#### POST /especialidades
+
+Crear. Params: Ninguno. Query: Ninguna. Body: nombre.
+
+Respuesta: **201 Especialidad**. Errores: 400 VALIDATION_ERROR o DUPLICATE_SPECIALTY.
+
+#### PUT /especialidades/:id
+
+Reemplazar nombre. Params: id positivo. Query: Ninguna. Body: nombre.
+
+Respuesta: **200 Especialidad**. Errores: 400 entrada inválida o duplicado; 404 ausente.
+
+#### DELETE /especialidades/:id
+
+Eliminar. Params: id positivo. Query: Ninguna. Body: Ninguno.
+
+Respuesta: **204 sin cuerpo**. Errores: 400 ID inválido; 404 ausente.
 
 GET individual, POST y PUT devuelven el objeto completo; el listado devuelve un arreglo de esos objetos. No hay restricción de eliminación por profesionales vinculados.
 
@@ -150,13 +172,35 @@ Body POST/PUT completo:
 
 nombre y matricula son strings obligatorios no vacíos, recortados con trim. especialidadId es número entero positivo seguro y debe existir en /especialidades. La matrícula es única sin distinguir mayúsculas. El ID se genera al crear. Campos extra se ignoran. PUT requiere todos los campos mostrados.
 
-| Método y path | Función | Params | Query | Body | Éxito | Errores propios |
-| --- | --- | --- | --- | --- | --- | --- |
-| GET /profesionales | Listar | Ninguno | Ninguna | Ninguno | 200 Profesional[] | 500 |
-| GET /profesionales/:id | Consultar uno | id positivo | Ninguna | Ninguno | 200 Profesional | 400 ID inválido; 404 ausente |
-| POST /profesionales | Crear | Ninguno | Ninguna | nombre, matricula, especialidadId | 201 Profesional | 400 VALIDATION_ERROR, DUPLICATE_REGISTRATION o INVALID_SPECIALTY |
-| PUT /profesionales/:id | Actualizar | id positivo | Ninguna | Igual a POST | 200 Profesional | 400 validación, matrícula duplicada o especialidad ausente; 404 profesional ausente |
-| DELETE /profesionales/:id | Eliminar | id positivo | Ninguna | Ninguno | 204 sin cuerpo | 400 ID inválido; 404 ausente |
+#### GET /profesionales
+
+Listar. Params: Ninguno. Query: Ninguna. Body: Ninguno.
+
+Respuesta: **200 Profesional[]**. Errores: 500.
+
+#### GET /profesionales/:id
+
+Consultar uno. Params: id positivo. Query: Ninguna. Body: Ninguno.
+
+Respuesta: **200 Profesional**. Errores: 400 ID inválido; 404 ausente.
+
+#### POST /profesionales
+
+Crear. Params: Ninguno. Query: Ninguna. Body: nombre, matricula, especialidadId.
+
+Respuesta: **201 Profesional**. Errores: 400 VALIDATION_ERROR, DUPLICATE_REGISTRATION o INVALID_SPECIALTY.
+
+#### PUT /profesionales/:id
+
+Actualizar. Params: id positivo. Query: Ninguna. Body: Igual a POST.
+
+Respuesta: **200 Profesional**. Errores: 400 validación, matrícula duplicada o especialidad ausente; 404 profesional ausente.
+
+#### DELETE /profesionales/:id
+
+Eliminar. Params: id positivo. Query: Ninguna. Body: Ninguno.
+
+Respuesta: **204 sin cuerpo**. Errores: 400 ID inválido; 404 ausente.
 
 GET individual, POST y PUT devuelven el objeto completo con ID; el listado devuelve un arreglo. Este recurso no está vinculado a los turnos heredados.
 
@@ -186,13 +230,35 @@ Filtros opcionales de GET /medicos, combinables con AND:
 Ejemplo: `{{baseUrl}}/medicos?especialidad=Nutrici%C3%B3n&disponible=true`.
 Filtros desconocidos, repetidos o inválidos: 400. Sin coincidencias: 200 con `[]`.
 
-| Método y path | Función | Params | Query | Body | Éxito | Errores propios |
-| --- | --- | --- | --- | --- | --- | --- |
-| GET /medicos | Listar o filtrar | Ninguno | especialidad, disponible | Ninguno | 200 Médico[] | 400 filtros inválidos |
-| GET /medicos/:id | Consultar uno | id positivo | Ninguna | Ninguno | 200 Médico | 400 ID inválido; 404 ausente |
-| POST /medicos | Registrar | Ninguno | Ninguna | Modelo Médico | 201 Médico | 400 validación o ID duplicado |
-| PUT /medicos/:id | Actualizar | id positivo | Ninguna | Modelo con id opcional | 200 Médico | 400 validación o DOCTOR_HAS_APPOINTMENTS; 404 ausente |
-| DELETE /medicos/:id | Eliminar sin turnos | id positivo | Ninguna | Ninguno | 204 sin cuerpo | 400 ID inválido o DOCTOR_HAS_APPOINTMENTS; 404 ausente |
+#### GET /medicos
+
+Listar o filtrar. Params: Ninguno. Query: especialidad, disponible. Body: Ninguno.
+
+Respuesta: **200 Médico[]**. Errores: 400 filtros inválidos.
+
+#### GET /medicos/:id
+
+Consultar uno. Params: id positivo. Query: Ninguna. Body: Ninguno.
+
+Respuesta: **200 Médico**. Errores: 400 ID inválido; 404 ausente.
+
+#### POST /medicos
+
+Registrar. Params: Ninguno. Query: Ninguna. Body: Modelo Médico.
+
+Respuesta: **201 Médico**. Errores: 400 validación o ID duplicado.
+
+#### PUT /medicos/:id
+
+Actualizar. Params: id positivo. Query: Ninguna. Body: Modelo con id opcional.
+
+Respuesta: **200 Médico**. Errores: 400 validación o DOCTOR_HAS_APPOINTMENTS; 404 ausente.
+
+#### DELETE /medicos/:id
+
+Eliminar sin turnos. Params: id positivo. Query: Ninguna. Body: Ninguno.
+
+Respuesta: **204 sin cuerpo**. Errores: 400 ID inválido o DOCTOR_HAS_APPOINTMENTS; 404 ausente.
 
 GET individual, POST y PUT devuelven el objeto completo del ejemplo; el listado, un arreglo. Con turnos asociados se bloquea la eliminación del médico y el cambio de su especialidad. Cambiar disponible no elimina los turnos.
 
@@ -232,13 +298,35 @@ Se rechazan campos extra. PUT requiere todos los campos obligatorios. Esta API v
 
 Filtros GET /turnos: especialidad (enum), fecha (YYYY-MM-DD) y medicoId (entero positivo escrito como texto), opcionales y combinables con AND. Los filtros desconocidos, repetidos o inválidos dan 400. Ejemplo: `{{baseUrl}}/turnos?medicoId=501&fecha=2026-10-20`.
 
-| Método y path | Función | Params | Query | Body | Éxito | Errores propios |
-| --- | --- | --- | --- | --- | --- | --- |
-| GET /turnos | Listar o filtrar | Ninguno | especialidad, fecha, medicoId | Ninguno | 200 Turno[] | 400 filtros inválidos |
-| GET /turnos/:id | Consultar uno | id positivo | Ninguna | Ninguno | 200 Turno | 400 ID inválido; 404 ausente |
-| POST /turnos | Crear y vincular a médico | Ninguno | Ninguna | Modelo Turno | 201 Turno | 400 validación, ID duplicado, DOCTOR_UNAVAILABLE o SPECIALTY_MISMATCH; 404 médico ausente |
-| PUT /turnos/:id | Actualizar | id positivo | Ninguna | Igual a POST con id opcional | 200 Turno | 400 validación, DOCTOR_UNAVAILABLE o SPECIALTY_MISMATCH; 404 turno o médico ausente |
-| DELETE /turnos/:id | Eliminar | id positivo | Ninguna | Ninguno | 204 sin cuerpo | 400 ID inválido; 404 ausente |
+#### GET /turnos
+
+Listar o filtrar. Params: Ninguno. Query: especialidad, fecha, medicoId. Body: Ninguno.
+
+Respuesta: **200 Turno[]**. Errores: 400 filtros inválidos.
+
+#### GET /turnos/:id
+
+Consultar uno. Params: id positivo. Query: Ninguna. Body: Ninguno.
+
+Respuesta: **200 Turno**. Errores: 400 ID inválido; 404 ausente.
+
+#### POST /turnos
+
+Crear y vincular a médico. Params: Ninguno. Query: Ninguna. Body: Modelo Turno.
+
+Respuesta: **201 Turno**. Errores: 400 validación, ID duplicado, DOCTOR_UNAVAILABLE o SPECIALTY_MISMATCH; 404 médico ausente.
+
+#### PUT /turnos/:id
+
+Actualizar. Params: id positivo. Query: Ninguna. Body: Igual a POST con id opcional.
+
+Respuesta: **200 Turno**. Errores: 400 validación, DOCTOR_UNAVAILABLE o SPECIALTY_MISMATCH; 404 turno o médico ausente.
+
+#### DELETE /turnos/:id
+
+Eliminar. Params: id positivo. Query: Ninguna. Body: Ninguno.
+
+Respuesta: **204 sin cuerpo**. Errores: 400 ID inválido; 404 ausente.
 
 GET individual, POST y PUT devuelven un objeto completo; GET listado devuelve un arreglo. Se emiten eventos Socket.IO turno:nuevo, turno:actualizado y turno:eliminado; no son endpoints REST adicionales.
 
